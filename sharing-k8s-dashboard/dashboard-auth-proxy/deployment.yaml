@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-auth-proxy
+  namespace: kubernetes-dashboard
+  labels:
+    app: dashboard-auth-proxy
+spec:
+  type: NodePort
+  ports:
+    - port: 5000
+      targetPort: 5000
+      protocol: TCP
+      name: tunnel-metrics
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: auth-proxy-server
+  selector:
+    app: dashboard-auth-proxy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-auth-proxy
+  namespace: kubernetes-dashboard
+  labels:
+    app: dashboard-auth-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard-auth-proxy
+  template:
+    metadata:
+      labels:
+        app: dashboard-auth-proxy
+    spec:
+      containers:
+        - name: dashboard-tunnel
+          # Image from https://hub.docker.com/r/cloudflare/cloudflared
+          image: cloudflare/cloudflared:2020.8.0
+          command: ["cloudflared", "tunnel"]
+          ports:
+            - containerPort: 5000
+          # Uncomment when added your origin-cert
+          #volumeMounts:
+          #  - name: origin-cert
+          #    mountPath: "/etc/cloudflared"
+          #    readOnly: true
+          env:
+            - name: TUNNEL_URL
+              value: "http://localhost:8000"
+            - name: NO_AUTOUPDATE
+              value: "true"
+            - name: TUNNEL_METRICS
+              value: "localhost:5000"
+            # Uncomment when added your origin-cert
+            #- name: TUNNEL_HOSTNAME
+            #  value: "dashboard.argotunnelexample.com"
+            #- name: TUNNEL_ORIGIN_CERT
+            #  value: "/etc/cloudflared/cert.pem"
+        # dashboard-proxy is a proxy that injects the dashboard token into Authorization header before forwarding
+        # the request to dashboard_proxy service
+        - name: dashboard-auth-proxy
+          image: dashboard-auth-proxy
+          ports:
+            - containerPort: 8000
+          env:
+            - name: LISTEN_ADDRESS
+              value: localhost:8000
+            - name: DASHBOARD_PROXY_URL
+              value: https://kubernetes-dashboard
+            - name: DASHBOARD_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: ${TOKEN_NAME}
+                  key: token
+      # Uncomment when added your origin-cert
+      #volumes:
+      #  - name: origin-cert
+      #    secret:
+      #      secretName: origin-cert
