@@ -1,4 +1,4 @@
-# TF Automated Argo Tunnel pointing to HTTPbin/SSH + Zero Trust 
+# TF Automated Cloudflare Tunnel pointing to HTTPbin/SSH + Zero Trust 
 
 1. Copy repo to your local workstation
 2. Change directory (cd) to the repo's location on your local workstation
