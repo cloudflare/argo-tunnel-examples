@@ -31,6 +31,7 @@ spec:
             path: /ready
             port: 2000
           failureThreshold: 1
+          initialDelaySeconds: 10
           periodSeconds: 10
         volumeMounts:
         - name: config
@@ -75,6 +76,9 @@ data:
     credentials-file: /etc/cloudflared/creds/credentials.json
     # Serves the metrics server under /metrics and the readiness server under /ready
     metrics: 0.0.0.0:2000
+    # Autoupdates applied in a k8s pod will be lost when the pod is removed or restarted, so
+    # autoupdate doesn't make sense in Kubernetes. However, outside of Kubernetes, we strongly
+    # recommend using autoupdate.
     no-autoupdate: true
     # The `ingress` block tells cloudflared which local service to route incoming
     # requests to. For more about ingress rules, see
@@ -84,6 +88,13 @@ data:
     # from the internet to cloudflared, run `cloudflared route dns <tunnel> <hostname>`.
     # E.g. `cloudflared route dns example-tunnel tunnel.example.com`.
     ingress:
+    # The first rule proxies traffic to the httpbin sample Service defined in app.yaml
     - hostname: tunnel.example.com
       service: http://web-service:80
+    # This rule sends traffic to the built-in hello-world HTTP server. This can help debug connectivity
+    # issues. If hello.example.com resolves and tunnel.example.com does not, then the problem is
+    # in the connection from cloudflared to your local service, not from the internet to cloudflared.
+    - hostname: hello.example.com
+      service: hello_world
+    # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
     - service: http_status:404
