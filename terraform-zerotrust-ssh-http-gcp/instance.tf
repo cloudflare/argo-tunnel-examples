@@ -1,13 +1,15 @@
-# Instance information
+# OS the server will use
 data "google_compute_image" "image" {
   family  = "ubuntu-minimal-1804-lts"
   project = "ubuntu-os-cloud"
 }
 
+# GCP Instance resource 
 resource "google_compute_instance" "origin" {
   name         = "test"
   machine_type = var.machine_type
   zone         = var.zone
+  // Your tags may differ. This one instructs the networking to not allow access to port 22
   tags         = ["no-ssh"]
 
   boot_disk {
@@ -22,7 +24,7 @@ resource "google_compute_instance" "origin" {
       // Ephemeral IP
     }
   }
-  // Optional config to make instance ephermaral 
+  // Optional config to make instance ephemeral 
   scheduling {
     preemptible       = true
     automatic_restart = false
