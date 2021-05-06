@@ -1,8 +1,10 @@
-# Install Argo Tunnel
+# Script to install Cloudflare Tunnel and Docker resources
 # Docker configuration
 cd /tmp
+# Retrieveing the docker repository for this OS
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+# The OS is updated and docker is installed
 sudo apt update -y && sudo apt upgrade -y
 sudo apt install docker docker-compose -y 
 # This is a herefile that is used to populate the /tmp/docker-compose.yml file. This logic is used elsewhere in this script 
@@ -17,25 +19,16 @@ services:
       - 8080:80
 EOF
 
-# Short lived certificate configuration
-sudo touch /etc/ssh/ca.pub
-sudo echo "${short_key}" >> /etc/ssh/ca.pub
-sudo cp -via /etc/ssh/sshd_config{,.orig}
-#sudo cat >> /etc/ssh/sshd_config << "EOF"
-#  PubkeyAuthentication yes
-#  TrustedUserCAKeys /etc/ssh/ca.pub
-#  PasswordAuthentication no
-# EOF
-
-sudo systemctl reload sshd
-
 # cloudflared configuration
 cd
+# The package for this OS is retrieved 
 wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.deb
 sudo dpkg -i cloudflared-stable-linux-amd64.deb
+# A local user directory is first created before we can install the tunnel as a system service 
 mkdir ~/.cloudflared
 touch ~/.cloudflared/cert.json
 touch ~/.cloudflared/config.yml
+# Another herefile is used to dynamically populate the JSON credentials file 
 cat > ~/.cloudflared/cert.json << "EOF"
 {
     "AccountTag"   : "${account}",
@@ -44,6 +37,7 @@ cat > ~/.cloudflared/cert.json << "EOF"
     "TunnelSecret" : "${secret}"
 }
 EOF
+# Same concept with the Ingress Rules the tunnel will use 
 cat > ~/.cloudflared/config.yml << "EOF"
 tunnel: ${tunnel_id}
 credentials-file: /etc/cloudflared/cert.json
@@ -61,9 +55,10 @@ ingress:
   - hostname: "*"
     service: hello-world
 EOF
-
+# Now we install the tunnel as a systemd service 
 sudo cloudflared service install
+# The credentials file does not get copied over so we'll do that manually 
 sudo cp -via ~/.cloudflared/cert.json /etc/cloudflared/
-
+# Now we can bring up our container(s) with docker-compose and then start the tunnel 
 cd /tmp
 sudo docker-compose up -d && sudo service cloudflared start

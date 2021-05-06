@@ -5,10 +5,10 @@ data "google_compute_image" "image" {
 }
 
 resource "google_compute_instance" "origin" {
-  name         = "dlg-test"
+  name         = "test"
   machine_type = var.machine_type
   zone         = var.zone
-  //tags         = ["no-ssh"]
+  tags         = ["no-ssh"]
 
   boot_disk {
     initialize_params {
@@ -35,7 +35,6 @@ resource "google_compute_instance" "origin" {
       tunnel_id   = cloudflare_argo_tunnel.auto_tunnel.id,
       tunnel_name = cloudflare_argo_tunnel.auto_tunnel.name,
       secret      = random_id.argo_secret.b64_std
-      short_key   = cloudflare_access_ca_certificate.ssh_short_key.public_key
     })
 }
 
