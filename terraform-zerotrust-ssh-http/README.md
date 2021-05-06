@@ -1,4 +1,4 @@
-# TF Automated Argo Tunnel pointing to HTTPbin/SSH + Zero Trust 
+# TF Automated Cloudflare Tunnel pointing to HTTPbin/SSH + Zero Trust 
 
 1. Copy repo to your local workstation
 2. Change directory (cd) to the repo's location on your local workstation
@@ -10,14 +10,14 @@
 
 Typically takes ~4 mins to fully spin up. 
 
-This RTE (soon to be blog) creates a GCP instance running an httpbin docker container.
+This repo creates a GCP instance running an httpbin docker container.
 
-It also spins up a Argo Tunnel on the GCP instance proxying traffic to the httpbin container
+It also spins up a Cloudflare Tunnel on the GCP instance proxying traffic to the httpbin container
 and the local SSH port on the device.
 
 DNS records are created at Cloudflare to point to the tunnel endpoint. 
 
-The GCP instance is set to not accept SSH traffic.
+The GCP instance is set to not accept SSH traffic per the network tags applied to the instance.
 
 An access policy is create for `ssh.yourdomain.com` and the only person allowed is the user 
 provided to `cloudflare_email` in `terraform.tfvars`.
@@ -47,4 +47,4 @@ HTTPBin container
 SSH end point of the GCP compute instance
 
 # Terraform version
-Compatible with `0.14.*`, `0.13.*`
+Compatible with `0.15.*`, `0.14.*`, `0.13.*`
