@@ -18,9 +18,3 @@ resource "cloudflare_access_policy" "ssh_policy" {
     email = [var.cloudflare_email]
   }
 }
-
-# Adding in a short lived SSH certificate; guide can be found at https://developers.cloudflare.com/cloudflare-one/tutorials/ssh-cert-bastion
-resource "cloudflare_access_ca_certificate" "ssh_short_key" {
-  zone_id        = var.cloudflare_zone_id
-  application_id = cloudflare_access_application.ssh_app.id
-}
