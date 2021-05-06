@@ -1,8 +1,0 @@
-cloudflare_zone       = ""
-cloudflare_zone_id    = ""
-cloudflare_account_id = ""
-cloudflare_email      = ""
-cloudflare_token      = ""
-gcp_project_id        = "globalse-198312"
-zone                  = "us-east1-b"
-machine_type          = "f1-micro"
