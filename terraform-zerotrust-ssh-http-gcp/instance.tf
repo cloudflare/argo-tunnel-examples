@@ -36,7 +36,7 @@ resource "google_compute_instance" "origin" {
       account     = var.cloudflare_account_id,
       tunnel_id   = cloudflare_argo_tunnel.auto_tunnel.id,
       tunnel_name = cloudflare_argo_tunnel.auto_tunnel.name,
-      secret      = random_id.argo_secret.b64_std
+      secret      = random_id.tunnel_secret.b64_std
     })
 }
 
