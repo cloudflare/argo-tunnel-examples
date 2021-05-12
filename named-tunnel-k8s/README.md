@@ -26,7 +26,7 @@ $ kubectl create secret generic tunnel-credentials \
 
     ![create CNAME](create-cname.png)
 
-You can do this from the command line by running `cloudflared route dns <tunnel> <hostname>`. For example, `cloudflared tunnel route dns example-tunnel tunnel.example.com`. You can use a similar method to route traffic to cloudflared from a [Cloudflare Load Balancer](https://www.cloudflare.com/load-balancing/), see [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/routing-to-tunnel/lb) for details.
+You can do this from the command line by running `cloudflared tunnel route dns <tunnel> <hostname>`. For example, `cloudflared tunnel route dns example-tunnel tunnel.example.com`. You can use a similar method to route traffic to cloudflared from a [Cloudflare Load Balancer](https://www.cloudflare.com/load-balancing/), see [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/routing-to-tunnel/lb) for details.
 
 5. Deploy cloudflared by applying its manifest. This will start a [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) for running cloudflared and a [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/) with cloudflared's config. When Cloudflare receives traffic for the DNS or Load Balancing hostname you configured in the previous step, it will send that traffic to the cloudflareds running in this deployment. Those cloudflared instances will proxy the request to your app's Service.
 
