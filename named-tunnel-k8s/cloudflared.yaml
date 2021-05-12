@@ -85,8 +85,8 @@ data:
     # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/ingress
     #
     # Remember, these rules route traffic from cloudflared to a local service. To route traffic
-    # from the internet to cloudflared, run `cloudflared route dns <tunnel> <hostname>`.
-    # E.g. `cloudflared route dns example-tunnel tunnel.example.com`.
+    # from the internet to cloudflared, run `cloudflared tunnel route dns <tunnel> <hostname>`.
+    # E.g. `cloudflared tunnel route dns example-tunnel tunnel.example.com`.
     ingress:
     # The first rule proxies traffic to the httpbin sample Service defined in app.yaml
     - hostname: tunnel.example.com
