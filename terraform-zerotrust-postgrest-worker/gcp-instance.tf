@@ -10,8 +10,25 @@ resource "random_password" "postgresql_password" {
   override_special = "_%@"
 }
 
+locals {
+  startup_script = templatefile("./gcp-instance-startup-script.tpl",
+    {
+      ssh_subdomain       = var.cloudflare_ssh_subdomain,
+      postgrest_subdomain = var.cloudflare_postgrest_subdomain,
+      postgresql_password = random_password.postgresql_password.result,
+      cf_account_id       = var.cloudflare_account_id,
+      cf_zone             = var.cloudflare_zone,
+      cf_tunnel_id        = cloudflare_argo_tunnel.auto_tunnel.id,
+      cf_tunnel_name      = cloudflare_argo_tunnel.auto_tunnel.name,
+      cf_tunnel_secret    = random_id.tunnel_secret.b64_std
+  })
+}
+
 # GCP Instance resource 
 resource "google_compute_instance" "origin" {
+  # only run when var.ssh_host_ip is not defined
+  count = var.ssh_host_ip == "" ? 1 : 0
+
   name         = "zerotrust-postgrest-example"
   machine_type = var.gcp_machine_type
   zone         = var.gcp_zone

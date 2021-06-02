@@ -56,3 +56,34 @@ variable "cloudflare_token" {
   description = "The Cloudflare user's API token."
   type        = string
 }
+
+# Variables for the bonus "any SSH host" installation
+variable "ssh_host_ip" {
+  description = "The SSH host IP address"
+  type        = string
+  default     = ""
+}
+
+variable "ssh_host_port" {
+  description = "The SSH host port"
+  type        = string
+  default     = 22
+}
+
+variable "ssh_key_path" {
+  description = "The path to your SSH key"
+  type        = string
+  default     = "~/.ssh/my_id_rsa"
+}
+
+variable "ssh_user" {
+  description = "The SSH user"
+  type        = string
+  default     = "ubuntu"
+}
+
+variable "ssh_password" {
+  description = "The SSH password"
+  type        = string
+  default     = ""
+}
