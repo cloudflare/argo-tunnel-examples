@@ -50,7 +50,7 @@ sudo dpkg -i cloudflared-stable-linux-amd64.deb
 # A local user directory is first created before we can install the tunnel as a system service 
 mkdir ~/.cloudflared || echo ~/.cloudflared already exists
 # Another herefile is used to dynamically populate the JSON credentials file
-cat <<EOF > ~/.cloudflared/cert.json
+cat <<EOF > ~/.cloudflared/creds.json
 {
     "AccountTag"   : "${cf_account_id}",
     "TunnelID"     : "${cf_tunnel_id}",
@@ -64,7 +64,7 @@ EOF
 rm /etc/cloudflared/config.yml
 cat <<EOF > ~/.cloudflared/config.yml
 tunnel: ${cf_tunnel_id}
-credentials-file: /etc/cloudflared/cert.json
+credentials-file: /etc/cloudflared/creds.json
 logfile: /var/log/cloudflared.log
 loglevel: info
 
@@ -81,7 +81,7 @@ EOF
 
 # The credentials file does not get copied over so we'll do that manually 
 mkdir /etc/cloudflared || echo /etc/cloudflared already exists
-yes | sudo cp -via ~/.cloudflared/cert.json /etc/cloudflared/
+yes | sudo cp -via ~/.cloudflared/creds.json /etc/cloudflared/
 # Now we install the tunnel as a systemd service 
 sudo cloudflared service install
 # Now we can bring up our container(s) with docker-compose and then start the tunnel 
