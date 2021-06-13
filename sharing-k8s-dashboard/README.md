@@ -49,7 +49,7 @@ so the hostname is different everytime you restart the dashboard-auth-proxy serv
 
 1. Pick a zone you want to use, and download a certificate to start your tunnel. See https://developers.cloudflare.com/argo-tunnel/quickstart#step-3-login-to-your-cloudflare-account. 
 
-2. Once you have the certificate, add the certificate as a sercret in kubernetes-dashboard namespace. Make sure to change the file path to where your cert is downloaded:
+2. Once you have the certificate, add the certificate as a secret in kubernetes-dashboard namespace. Make sure to change the file path to where your cert is downloaded:
 
     $ kubectl create secret generic origin-cert -n kubernetes-dashboard --from-file=~/.cloudflared/cert.pem
 
