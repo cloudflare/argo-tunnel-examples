@@ -24,6 +24,13 @@ cloudflare:
     # - hostname: hello.example.com
     #   service: hello_world
 
+secret:
+  # -- switch to false to prevent creating the secret
+  enabled: true
+  # -- Provide custom name of existing secret, or custom name of secret to be created
+  nameOverride: ""
+  # nameOverride: "myCustomSecret"
+
 image:
   repository: cloudflare/cloudflared
   pullPolicy: IfNotPresent
@@ -44,6 +51,7 @@ serviceAccount:
   name: ""
 
 podAnnotations: {}
+podLabels: {}
 
 # Security items common to everything in the pod.  Here we require that it
 # does not run as the user defined in the image, literally named "nonroot".

@@ -49,3 +49,14 @@ Selector labels
 app.kubernetes.io/name: {{ include "cloudflare-tunnel.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Generate the name of the secret resource containing secrets
+*/}}
+{{- define "cloudflare-tunnel.secretname" -}}
+{{- if .Values.secret.nameOverride -}}
+{{- .Values.secret.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{ include "cloudflare-tunnel.fullname" . }}
+{{- end -}}
+{{- end -}}
