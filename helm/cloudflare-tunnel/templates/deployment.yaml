@@ -16,9 +16,9 @@ spec:
       annotations:
         # These are here so the deployment rolls when the config or secret change.
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-      {{- if .Values.secret.enabled -}}
+      {{- if .Values.secret.enabled }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-      {{- end -}}
+      {{- end }}
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
