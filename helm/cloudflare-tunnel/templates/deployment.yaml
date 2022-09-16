@@ -16,12 +16,17 @@ spec:
       annotations:
         # These are here so the deployment rolls when the config or secret change.
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      {{- if .Values.secret.enabled }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-        {{- with .Values.podAnnotations }}
+      {{- end }}
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-        {{- end }}
+      {{- end }}
       labels:
         {{- include "cloudflare-tunnel.selectorLabels" . | nindent 8 }}
+      {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -43,6 +48,8 @@ spec:
             - --config
             - /etc/cloudflared/config/config.yaml
             - run
+          env:
+            {{- toYaml .Values.extraEnvs | nindent 12 }}
           livenessProbe:
             httpGet:
               # Cloudflared has a /ready endpoint which returns 200 if and only if
@@ -67,7 +74,7 @@ spec:
       volumes:
         - name: creds
           secret:
-            secretName: {{ include "cloudflare-tunnel.fullname" . }}
+            secretName: {{ include "cloudflare-tunnel.secretname" . }}
         - name: config
           configMap:
             name: {{ include "cloudflare-tunnel.fullname" . }}
