@@ -12,6 +12,8 @@ cloudflare:
   secret: ""
   # If true, turn on WARP routing for TCP
   enableWarp: false
+  # Origin proxy configuration: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/local-management/ingress/#origin-configuration
+  originRequest: {}
   # Define ingress rules for the tunnel. See
   # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/configuration-file/ingress
   ingress: []
@@ -78,6 +80,11 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+
+# Define extra environmental variables to be used by the tunnel.
+# Full list can be found here:
+# - https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/local-management/arguments/
+extraEnvs: []
 
 nodeSelector: {}
 

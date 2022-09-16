@@ -48,6 +48,8 @@ spec:
             - --config
             - /etc/cloudflared/config/config.yaml
             - run
+          env:
+            {{- toYaml .Values.extraEnvs | nindent 12 }}
           livenessProbe:
             httpGet:
               # Cloudflared has a /ready endpoint which returns 200 if and only if
