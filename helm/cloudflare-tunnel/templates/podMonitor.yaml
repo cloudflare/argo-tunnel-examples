@@ -1,0 +1,23 @@
+{{- if and .Values.metrics.monitor.enabled (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  annotations:
+    {{- toYaml .Values.metrics.monitor.annotations | nindent 4 }}
+  labels:
+    {{- toYaml .Values.metrics.monitor.labels | nindent 4 }}
+  name: {{ .Chart.Name }}-podmonitor
+spec:
+  jobLabel: {{ .Chart.Name }}
+  namespaceSelector:
+    any: false
+    matchNames:
+    - {{ .Release.Namespace }}
+  podMetricsEndpoints:
+  - interval: 15s
+    path: {{ .Values.metrics.path }}
+    port: {{ .Values.metrics.portName }}
+  selector:
+    matchLabels:
+      {{- include "cloudflare-tunnel.selectorLabels" . | nindent 6 }}
+{{- end }}

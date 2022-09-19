@@ -92,3 +92,16 @@ tolerations: []
 
 # Default affinity is to spread out over nodes; use this to override.
 affinity: {}
+
+# Metrics configuration
+metrics:
+  port: 2000
+  portName: http-metrics
+  path: /metrics
+  monitor:
+    # Enable the podMonitor for the metrics endpoint
+    enabled: true
+    # Custom podMonitor annotations
+    annotations: {}
+    # Custom podMonitor labels
+    labels: {}

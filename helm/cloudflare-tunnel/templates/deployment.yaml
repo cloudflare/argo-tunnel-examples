@@ -50,6 +50,10 @@ spec:
             - run
           env:
             {{- toYaml .Values.extraEnvs | nindent 12 }}
+          ports:
+            - containerPort: {{ .Values.metrics.port }}
+              name: {{ .Values.metrics.portName }}
+              protocol: TCP
           livenessProbe:
             httpGet:
               # Cloudflared has a /ready endpoint which returns 200 if and only if
