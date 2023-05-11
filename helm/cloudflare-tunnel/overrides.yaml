@@ -1,0 +1,37 @@
+cloudflare:
+  # Your Cloudflare account number.
+  account: "f5f7ef53c290674c9bbfe612cb53fa12"
+  # The name of the tunnel this instance will serve
+  tunnelName: "k3d-ory-cloud"
+  # The ID of the above tunnel.
+  tunnelId: "205082a8-b5b2-498a-87ae-e832fb6cc6df"
+  # The secret for the tunnel.
+  secret: "8Sb7Khe8s5Fz3t1FcweIcAnAT6aOGWIqPL44NcmTrxU="
+  # If true, turn on WARP routing for TCP
+  enableWarp: false
+  # Define ingress rules for the tunnel. See
+  # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/configuration-file/ingress
+  originRequest:
+    connectTimeout: '60s'
+  ingress:
+    - hostname: grafana.k3dlocal.oryapis.dev
+      service: http://prometheus-grafana.observability.svc.cluster.local:80
+    # The first rule proxies traffic to the httpbin sample service named web-server at port 80
+    # - hostname: tunnel.example.com
+    #  service: http://web-service:80
+    # This rule sends traffic to the built-in hello-world HTTP server. This can help debug connectivity
+    # issues. If hello.example.com resolves and tunnel.example.com does not, then the problem is
+    # in the connection from cloudflared to your local service, not from the internet to cloudflared.
+    # - hostname: hello.example.com
+    #   service: hello_world
+
+secret:
+  # -- switch to false to prevent creating the secret
+  enabled: false
+  # -- Provide custom name of existing secret, or custom name of secret to be created
+  # nameOverride: ""
+  nameOverride: "myCustomSecret"
+
+# extraEnvs:
+#   - name: FOO
+#     value: BAR
