@@ -1,14 +1,13 @@
-{{ if eq .Values.deploymentType "deployment" }}
+{{ if eq .Values.deploymentType "daemonset" }}
 # Here we deploy cloudflared images. The tunnel credentials are stored in
 # a k8s secret, and the configuration is stored in a k8s configmap.
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: {{ include "cloudflare-tunnel.fullname" . }}
   labels:
     {{- include "cloudflare-tunnel.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "cloudflare-tunnel.selectorLabels" . | nindent 6 }}
@@ -89,24 +88,6 @@ spec:
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      affinity:
-        {{- with .Values.affinity }}
-        {{- toYaml . | nindent 8 }}
-        {{- else }}
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 10
-              podAffinityTerm:
-                topologyKey: kubernetes.io/hostname
-                labelSelector:
-                  matchExpressions:
-                  {{- range $k, $v := include "cloudflare-tunnel.selectorLabels" . | fromYaml }}
-                    - key: {{ $k }}
-                      operator: In
-                      values:
-                        - {{ $v }}
-                  {{- end }}
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:

@@ -25,6 +25,7 @@ cloudflare:
     # in the connection from cloudflared to your local service, not from the internet to cloudflared.
     # - hostname: hello.example.com
     #   service: hello_world
+  protocol: auto
 
 secret:
   # -- switch to false to prevent creating the secret
@@ -39,6 +40,10 @@ image:
   # If supplied, this overrides "appVersion"
   tag: ""
 
+# Deployment type.  Set to "deployment" to use a Deployment, or "daemonset" to use a DaemonSet.
+deploymentType: deployment
+
+# Replica count is used only when deploying the tunnel as a Deployment.
 replicaCount: 2
 
 imagePullSecrets: []
