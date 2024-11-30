@@ -1,6 +1,7 @@
 # Script to install Cloudflare Tunnel and Docker resources
 # Docker configuration
 cd /tmp
+sudo apt-get install software-properties-common
 # Retrieveing the docker repository for this OS
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
@@ -20,10 +21,10 @@ services:
 EOF
 
 # cloudflared configuration
-cd
+cd ~
 # The package for this OS is retrieved 
-wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.deb
-sudo dpkg -i cloudflared-stable-linux-amd64.deb
+wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+sudo dpkg -i cloudflared-linux-amd64.deb
 # A local user directory is first created before we can install the tunnel as a system service 
 mkdir ~/.cloudflared
 touch ~/.cloudflared/cert.json
@@ -61,4 +62,4 @@ sudo cloudflared service install
 sudo cp -via ~/.cloudflared/cert.json /etc/cloudflared/
 # Now we can bring up our container(s) with docker-compose and then start the tunnel 
 cd /tmp
-sudo docker-compose up -d && sudo service cloudflared start
+sudo docker-compose up -d && sudo systemctl start cloudflared
