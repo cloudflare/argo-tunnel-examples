@@ -65,6 +65,8 @@ spec:
 # It's useful to define it in k8s, rather than as a stand-alone .yaml file, because
 # this lets you use various k8s templating solutions (e.g. Helm charts) to
 # parameterize your config, instead of just using string literals.
+# For more about configuration parameters and their default settings, see
+# https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/local-management/ingress/#origin-configuration
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -91,6 +93,7 @@ data:
     # The first rule proxies traffic to the httpbin sample Service defined in app.yaml
     - hostname: tunnel.example.com
       service: http://web-service:80
+      httpHostHeader: tunnel.example.com
     # This rule sends traffic to the built-in hello-world HTTP server. This can help debug connectivity
     # issues. If hello.example.com resolves and tunnel.example.com does not, then the problem is
     # in the connection from cloudflared to your local service, not from the internet to cloudflared.
