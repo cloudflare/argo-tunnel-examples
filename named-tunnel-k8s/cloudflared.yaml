@@ -82,7 +82,7 @@ data:
     no-autoupdate: true
     # The `ingress` block tells cloudflared which local service to route incoming
     # requests to. For more about ingress rules, see
-    # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/ingress
+    # https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/local-management/configuration-file
     #
     # Remember, these rules route traffic from cloudflared to a local service. To route traffic
     # from the internet to cloudflared, run `cloudflared tunnel route dns <tunnel> <hostname>`.
